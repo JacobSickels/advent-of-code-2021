@@ -1,0 +1,4 @@
+(ns advent-of-code-2021.day-4
+  (:require [advent-of-code-2021.core :as core]))
+
+(def data (core/load-edn "day_04.edn"))
