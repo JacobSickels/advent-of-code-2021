@@ -11,6 +11,6 @@
   [resource-file]
   (edn/read (PushbackReader. (io/reader (io/resource resource-file)))))
 
-
-
+(defn inclusive-range [start end]
+  (range start (inc end)))
 
