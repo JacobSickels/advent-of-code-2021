@@ -12,8 +12,7 @@
   (apply min (map #(fuel-to-check input %) input)))
 
 (defn fuel-to-check-2 [input check]
-  (let [cost (fn [f] (reduce + 
-                             (core/inclusive-range 0 (Math/abs (- f check)))))]
+  (let [cost (fn [f] (reduce + (core/inclusive-range 0 (Math/abs (- f check)))))]
     (reduce + (map cost input))))
 
 (defn part-2 [input]
