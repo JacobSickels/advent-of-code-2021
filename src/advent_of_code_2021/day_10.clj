@@ -37,14 +37,14 @@
 
 (defn get-finishing-char [left]
   (cond
-    (= left \()  \)
-    (= left \[)  \]
-    (= left \{)  \}
-    (= left \<)  \>)) 
+    (= left \() \)
+    (= left \[) \]
+    (= left \{) \}
+    (= left \<) \>))
 
 (defn get-score-for-line [line]
-  (reduce #(+ %2 (* %1 5)) 
-          0 
+  (reduce #(+ %2 (* %1 5))
+          0
           (replace {\) 1 \] 2 \} 3 \> 4} line)))
 
 (defn get-middle [col]
@@ -59,7 +59,3 @@
        (map get-score-for-line)
        sort
        get-middle))
-              
-              
-      
-  
