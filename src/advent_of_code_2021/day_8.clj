@@ -20,6 +20,7 @@
 ;; This code is trash
 (defn find-digits [[line _]]
   (let [find-input (fn [l n] (first (filter #(= (count %) n) l)))
+        filter-by-count (fn [l cnt] (filter #(= (count %) cnt) l))
         ;; Initialize findings with character counts we already know
         findings {8 (find-input line 7)
                   7 (find-input line 3)
@@ -28,51 +29,33 @@
         ;; combine 7 and 4, find which string is only 1 character away from combination (9)
         findings (assoc findings 9 (first (filter
                                             #(= (count (set/difference (set %)
-                                                                       (set/union (set (find-input line 3)) 
-                                                                                  (set (find-input line 4)))))
+                                                                       (set/union (set (get findings 7)) 
+                                                                                  (set (get findings 4)))))
                                                 1)
-                                            (filter #(= (count %) 6) line))))
+                                            (filter-by-count line 6))))
         ;; A five count number that is one different from 9
-        findings (assoc findings 2 (first (filter #(and
-                                                     (= (count (set/difference (set (get findings 9)) (set %))) 2)
-                                                     (= (count %) 5)) 
-                                                  line)))
+        findings (assoc findings 2 (first (filter #(= (count (set/difference (set (get findings 9)) (set %))) 2) 
+                                                  (filter-by-count line 5))))
         ;; A five count number that wasn't already found
-        threes-or-5s (set (map set (filter #(and (not (contains? (set (vals findings)) %))  
-                                                 (= (count %) 5)) line)))
+        threes-or-5s (set (map set (filter #(not (contains? (set (vals findings)) %)) (filter-by-count line 5))))
         ;; A five count number that has all the characters from 1
         threes (first (filter #(empty? (set/difference (set (get findings 1)) %)) threes-or-5s))
         ;; A five count number that doesn't have all characters from 1
         fives (first (filter #(not (empty? (set/difference (set (get findings 1)) %))) threes-or-5s))
         ;; Add 3 to findings
-        findings (assoc findings 3 (first (filter #(and
-                                                     (= (set %) threes)
-                                                     (= (count %) 5))
-                                                  line)))
+        findings (assoc findings 3 (first (filter #(= (set %) threes) (filter-by-count line 5))))
         ;; Add 5 to findings
-        findings (assoc findings 5 (first (filter #(and
-                                                     (= (set %) fives)
-                                                     (= (count %) 5))
-                                                  line)))
+        findings (assoc findings 5 (first (filter #(= (set %) fives) (filter-by-count line 5))))
         ;; A six count number that wasn't already found
-        zero-or-six (set (map set (filter #(and
-                                             (not (contains? (set (map set (vals findings))) (set %)))
-                                             (= (count %) 6))
-                                          line)))
+        zero-or-six (set (map set (filter #(not (contains? (set (map set (vals findings))) (set %))) (filter-by-count line 6))))
         ;; A six count number that has all the characters from 1
         zero (first (filter #(empty? (set/difference (set (get findings 1)) %)) zero-or-six))
         ;; A six count number that doesn't have all the characters from 1
         six (first (filter #(not (empty? (set/difference (set (get findings 1)) %))) zero-or-six))
         ;; Add 0 to findings
-        findings (assoc findings 0 (first (filter #(and
-                                                     (= (set %) zero)
-                                                     (= (count %) 6))
-                                                  line)))
+        findings (assoc findings 0 (first (filter #(= (set %) zero) (filter-by-count line 6))))
         ;; Add 6 to findings
-        findings (assoc findings 6 (first (filter #(and
-                                                     (= (set %) six)
-                                                     (= (count %) 6))
-                                                  line)))]
+        findings (assoc findings 6 (first (filter #(= (set %) six) (filter-by-count line 6))))]
     findings))
        
 (defn find-number-from-string [output-str findings]
@@ -86,7 +69,7 @@
         findings (find-digits [line output])]
     (get-output-number output findings)))
 
-(defn part-2 [input]
+(defn part-2 [input] ;; 1009098
   (reduce + (map #(Integer/parseInt (apply str %)) 
                  (map get-output-for-line input))))
 
