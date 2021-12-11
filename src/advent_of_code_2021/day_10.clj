@@ -6,12 +6,13 @@
 
 (def left #{\( \[ \{ \<})
 (def right #{\) \] \} \>})
+(def pairs #{[\{ \}]
+             [\[ \]]
+             [\< \>]
+             [\( \)]})
 
-(defn is-matching? [left-char right-char]
-  (or (and (= left-char \() (= right-char \)))
-      (and (= left-char \[) (= right-char \]))
-      (and (= left-char \{) (= right-char \}))
-      (and (= left-char \<) (= right-char \>))))
+(defn is-matching? [left right]
+  (contains? pairs [left right]))
 
 (defn find-stack-type [line]
   (loop [l     line
