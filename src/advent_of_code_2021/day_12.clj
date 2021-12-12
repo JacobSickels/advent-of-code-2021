@@ -102,14 +102,11 @@
     (map #(conj lookup %) (get connections (last lookup)))))
 
 (defn remove-bad-paths [paths]
-  (remove #(or (and (> (count %) 1) (= :start (last %)))
-               (path-contains-double-lower? %))
-          paths))
-
+  (remove #(path-contains-double-lower? %) paths))
 
 (defn find-path-iteration [paths connections]
   (remove-bad-paths (reduce
-                      (fn [acc v] (concat acc (find-paths v connections)))
+                      (fn [acc v] (reduce conj acc (find-paths v connections)))
                       []
                       paths)))
 
@@ -120,3 +117,39 @@
       (if (= (set acc) (set last-acc))
         (count acc)
         (recur (find-path-iteration acc connections) acc)))))
+
+
+;; Part 2
+
+(defn path-is-valid? [path]
+  (let [freq (frequencies path)
+        double-keys (filter (fn [[k v]]
+                              (and (key-is-lower-chars? k) (>= v 2)))
+                            freq)]
+    
+    (and (<= (or (:start freq) 0) 1)
+         (<= (or (:end freq) 0) 1)
+         (<= (count double-keys) 1)
+         (if (= 1 (count double-keys))
+           (<= (second (first double-keys)) 2)
+           true))))
+         
+
+
+(defn remove-bad-paths-2 [paths]
+  (filter #(path-is-valid? %) paths))
+
+(defn find-path-iteration-2 [paths connections]
+  (remove-bad-paths-2 (reduce
+                        (fn [acc v] (reduce conj acc (find-paths v connections)))
+                        []
+                        paths)))
+
+(defn part-2 [input]
+  (let [connections (get-connections input)]
+    (loop [acc      (find-path-iteration-2 (find-paths [:start] connections) connections)
+           last-acc nil]
+      (if (= (set acc) (set last-acc))
+        (count acc)
+        (recur (find-path-iteration-2 acc connections) acc)))))
+  
