@@ -23,7 +23,4 @@
 (defn point-grid [width height inclusive?]
   (let [w-range        ((if inclusive? inclusive-range range) 0 width)
         h-range        ((if inclusive? inclusive-range range) 0 height)]
-    (apply concat (map (fn [h]
-                         (map (fn [w] (list w h))
-                              w-range))
-                       h-range))))
+    (combo/cartesian-product w-range h-range)))
