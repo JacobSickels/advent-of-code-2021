@@ -20,7 +20,13 @@
           (apply combo/cartesian-product
                  (map #(range (dec %) (+ 2 %)) point))))
 
-(defn point-grid [width height inclusive?]
-  (let [w-range        ((if inclusive? inclusive-range range) 0 width)
-        h-range        ((if inclusive? inclusive-range range) 0 height)]
-    (combo/cartesian-product w-range h-range)))
+(defn point-grid 
+  ([width height inclusive?]
+   (let [w-range        ((if inclusive? inclusive-range range) 0 width)
+         h-range        ((if inclusive? inclusive-range range) 0 height)]
+     (combo/cartesian-product w-range h-range)))
+  ([min-x max-x min-y max-y]
+   (let [w-range        (inclusive-range min-x max-x)
+         h-range        (inclusive-range min-y max-y)]
+     (combo/cartesian-product w-range h-range))))
+   
