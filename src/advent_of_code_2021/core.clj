@@ -16,9 +16,13 @@
   (range start (inc end)))
 
 (defn points-around [point]
-  (remove (fn [p] (= point p))
-          (apply combo/cartesian-product
-                 (map #(range (dec %) (+ 2 %)) point))))
+   (remove (fn [p] (= point p))
+           (apply combo/cartesian-product
+                  (map #(range (dec %) (+ 2 %)) point))))
+
+(defn points-around-inclusive [point]
+  (sort-by second (apply combo/cartesian-product
+                         (map #(range (dec %) (+ 2 %)) point))))
 
 (defn point-grid 
   ([width height inclusive?]

@@ -42,6 +42,7 @@
 ;; range-x 200
 ;; range-y 200
 ;; Not sure how to make sure this range works
+;; Answer was 7626
 (defn part-1 [input-area range-x range-y]
   (->> (core/point-grid range-x range-y true)
        (map #(get-points % input-area))
@@ -50,6 +51,16 @@
        (map second)
        (apply max)))
 
+;; I did checks with:
+;; -600 600 -600 600 => 2032
+;; -400 400 -400 400 => 2032
+;; -300 300 -300 300 => 2032
+
+;; However this one was different
+;; -200 200 -200 200 => 800
+
+;; So maximum is somewhere between [-200 200] and [-300, 300] for each but Im lazy and brute force isn't too slow
+;; Answer was 2032
 (defn part-2 [input-area min-x max-x min-y max-y]
   (->> (core/point-grid min-x max-x min-y max-y)
        (map #(get-points % input-area))
